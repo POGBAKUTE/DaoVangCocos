@@ -1,6 +1,9 @@
 import { _decorator, CCFloat, Component, EventMouse, input, Input, Node, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
-import { Line } from './Line';
+import { ItemGainType, Line } from './Line';
+import { GameManager, GameState } from './GameManager';
+import { AudioManager } from './Audio/AudioManager';
+import { AudioPullDownItem } from './Audio/AudioPullDownItem';
 
 @ccclass('Player')
 export class Player extends Component {
@@ -17,10 +20,10 @@ export class Player extends Component {
 
     private horizontal: number = 1;
     private isThrow: boolean = true;
+    private isPause: boolean = false;
 
-    setThrow(coin: number): void {
+    setThrow(): void {
         this.isThrow = false;
-        this.node.emit("UpdateCoin", coin);
         input.on(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
     }
 
@@ -28,14 +31,12 @@ export class Player extends Component {
         this.isThrow = true;
         this.line.onDespawn(this.isThrow);
         input.off(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
+        AudioManager.Instance.openAudio(AudioPullDownItem);
     }
 
-    start() {
-
-    }
 
     update(deltaTime: number) {
-        if (!this.isThrow) {
+        if (!this.isThrow && !this.isPause) {
             this.Rotate(deltaTime);
 
         }
@@ -62,6 +63,16 @@ export class Player extends Component {
             this.line.node.off('CollisionCircle', this.setThrow, this);
         }
         this.isThrow = !active;
+    }
+
+    public pausePlayer(active: boolean): void {
+        this.isPause = active;
+        this.line.pauseLine(active);
+    }
+    resetPlayer() {
+        this.line.resetLine();
+        this.node.angle = 0;
+        this.isThrow = true;
     }
 }
 

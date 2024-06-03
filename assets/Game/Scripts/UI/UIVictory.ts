@@ -1,18 +1,25 @@
 import { _decorator, Button, Component, Label, Node } from 'cc';
 import { UICanvas } from './UICanvas';
 import { GameManager, GameState } from '../GameManager';
+import { UIManager } from './UIManager';
+import { UIShop } from './UIShop';
+import { AudioManager } from '../Audio/AudioManager';
+import { AudioNut } from '../Audio/AudioNut';
+import { AudioWin } from '../Audio/AudioWin';
+import { App } from '../App';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIVictory')
 export class UIVictory extends UICanvas {
-    @property(Button)
-    buttonShop: Button
 
     @property(Button)
     buttonNext: Button
 
     @property(Label)
-    notify: Label
+    coin: Label
+
+    @property(Label)
+    target: Label
 
     protected start(): void {
         
@@ -20,19 +27,20 @@ export class UIVictory extends UICanvas {
     }
 
     public open() : void {
-        console.log("jdjdfsfds")
         super.open();
-        this.updateNotify();
+        this.updateState();
+        AudioManager.Instance.openAudio(AudioWin);
     }
 
     NextButton() {
         this.close(0);
-        GameManager.Instance.setCurrentState(GameState.GS_PLAYING);
+        UIManager.Instance.openUI(UIShop)
+        AudioManager.Instance.openAudio(AudioNut);
     }
 
-    updateNotify(): void {
-        console.log("jdjdfsfds")
-        this.notify.string = "Bạn đã vượt qua Level " + GameManager.Instance.currentMapIndex;
+    updateState(): void {
+        this.coin.string = App.formatMoney(GameManager.Instance.coinCurrent);
+        this.target.string = App.formatMoney(GameManager.Instance.targetCurrent);
     }
 
 

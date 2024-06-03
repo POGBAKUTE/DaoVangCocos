@@ -1,6 +1,16 @@
-import { _decorator, CCFloat, CCInteger, Collider2D, Component, Contact2DType, IPhysics2DContact, Node } from 'cc';
+import { _decorator, CCFloat, CCInteger, Collider2D, Component, Contact2DType, Enum, IPhysics2DContact, Node } from 'cc';
 import { MapController } from './MapController';
+import { MoveItem } from './MoveItem';
 const { ccclass, property } = _decorator;
+
+export enum ItemType {
+    BOM = 0,
+    DIAMOND = 1,
+    GOLD = 2,
+    DA = 3,
+    LUCKY = 4,
+    CHUOT = 5
+}
 
 @ccclass('CoinItem')
 export class CoinItem extends Component {
@@ -10,8 +20,8 @@ export class CoinItem extends Component {
     @property(CCInteger)
     coin: number;
 
-    @property(CCInteger)
-    typeItem: number = 0;
+    @property({type : Enum(ItemType)})
+    typeItem: ItemType = ItemType.GOLD;
 
     @property(CCFloat)
     radiusBom: number = 0;
@@ -35,17 +45,20 @@ export class CoinItem extends Component {
     }
 
     onDespawn(active: boolean, target: Node) {
-        if(this.typeItem === 0) {
+        if(this.typeItem === ItemType.BOM) {
+            MapController.Instance.onDeActiveRadius(this, this.radiusBom);
+        }
+        else {
+            if(this.typeItem === ItemType.CHUOT) {
+                this.getComponent(MoveItem).stopTween();
+            }
             this.isCollider = active;
             this.target = target;
-        }
-        else if(this.typeItem === 1) {
-            MapController.Instance.onDeActiveRadius(this, this.radiusBom);
         }
     }
 
     onDeActive() {
-        if(this.typeItem == 0) {
+        if(this.typeItem !== ItemType.BOM) {
             setTimeout(() => {
     
                if(this != null) {

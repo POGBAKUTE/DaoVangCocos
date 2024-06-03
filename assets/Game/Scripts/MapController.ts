@@ -8,9 +8,6 @@ export class MapController extends Component {
     @property({ type: Node })
     parentPoint: Node;
 
-    @property({ type: CCInteger })
-    target: number;
-
     listItem: Array<CoinItem>;
 
     onLoad() {

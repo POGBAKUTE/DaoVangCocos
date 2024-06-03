@@ -2,6 +2,12 @@ import { _decorator, Button, Component, Label, Node } from 'cc';
 import { UICanvas } from './UICanvas';
 import { GameManager } from '../GameManager';
 import { UIManager } from './UIManager';
+import { UIHome } from './UIHome';
+import { UIGamePLay } from './UIGamePLay';
+import { AudioManager } from '../Audio/AudioManager';
+import { AudioNut } from '../Audio/AudioNut';
+import { AudioThua } from '../Audio/AudioThua';
+import { App } from '../App';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIFail')
@@ -10,7 +16,10 @@ export class UIFail extends UICanvas {
     buttonHome: Button
 
     @property(Label)
-    notify: Label
+    coin: Label
+
+    @property(Label)
+    target: Label
 
     protected start(): void {
         this.buttonHome.node.on(Button.EventType.CLICK, this.HomeButton, this);
@@ -18,16 +27,20 @@ export class UIFail extends UICanvas {
 
     HomeButton() {
         this.close(0);
-        UIManager.Instance.uIHome.open();
+        UIManager.Instance.openUI(UIHome);
+        UIManager.Instance.closeUI(UIGamePLay, 0);
+        AudioManager.Instance.openAudio(AudioNut)
     }
 
-    open() {
+    public open() : void {
         super.open();
-        this.setup();
+        AudioManager.Instance.openAudio(AudioThua)
+        this.updateState();
     }
 
-    public setup(): void {
-        this.notify.string = "Bạn không thể vượt qua Level " + GameManager.Instance.currentMapIndex;
+    updateState(): void {
+        this.coin.string = App.formatMoney(GameManager.Instance.coinCurrent);
+        this.target.string = App.formatMoney(GameManager.Instance.targetCurrent);
     }
 }
 
