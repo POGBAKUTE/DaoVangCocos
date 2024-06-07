@@ -30,7 +30,7 @@ export class UIFail extends UICanvas {
         this.close(0);
         UIManager.Instance.openUI(UIHome);
         UIManager.Instance.closeUI(UIGamePLay, 0);
-        AudioManager.Instance.openAudio(AudioNut)
+        // AudioManager.Instance.openAudio(AudioNut)
     }
 
     public open() : void {

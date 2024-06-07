@@ -36,7 +36,7 @@ export class UIVictory extends UICanvas {
     NextButton() {
         this.close(0);
         UIManager.Instance.openUI(UIShop)
-        AudioManager.Instance.openAudio(AudioNut);
+        // AudioManager.Instance.openAudio(AudioNut);
     }
 
     updateState(): void {

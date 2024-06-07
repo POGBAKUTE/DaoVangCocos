@@ -27,7 +27,7 @@ export class MoveLabel extends Component {
             .call(() => {
                 this.onActive(true);
             })
-            .to(this.duration, { position: this.endPos }, { easing: easing.bounceOut })
+            .to(this.duration, { position: this.endPos }, { easing: easing.cubicOut })
             .start();
     }
 

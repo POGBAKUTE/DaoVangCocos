@@ -34,7 +34,8 @@ export class UIShop extends UICanvas {
     listItemShop: ItemShopBase[] = [];
 
     protected start(): void {
-        this.buttonNext.node.on(Button.EventType.CLICK, this.nextButton, this);
+        // this.buttonNext.node.on(Button.EventType.CLICK, this.nextButton, this);
+        this.node.on("OffNode", this.nextButton, this);
     }
 
     nextButton() {

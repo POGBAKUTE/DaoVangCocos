@@ -12,6 +12,8 @@ import { AudioBom } from '../Audio/AudioBom';
 import { AudioClock } from '../Audio/AudioClock';
 import { MoveLabel } from '../Popup/MoveLabel';
 import { MoveItemGamePLay } from './MoveItemGamePLay';
+import { UICountDownStart } from './UICountDownStart';
+import { BubleItem } from '../Popup/BubleItem';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIGamePlay')
@@ -56,6 +58,7 @@ export class UIGamePLay extends UICanvas {
         this.preparePlay.active = false;
         this.startPlay.active = true;
         GameManager.Instance.mapCurrent.getComponent(MapController).onBubleItem();
+        UIManager.Instance.openUI(UICountDownStart);
         setTimeout(() => {
 
             this.moveItemPlay.onAnimPlay()
@@ -95,6 +98,7 @@ export class UIGamePLay extends UICanvas {
 
     public updateCoin(coin: number): void {
         // this.labelCoinStart.string = App.formatMoney(coin);
+        this.labelCoinStart.node.getParent().getComponent(BubleItem).move();
         this.changeNumber(this.labelCoinStart, this.currentCoinLabel, coin, this.changeTime)
         this.labelCoinPrepare.string = App.formatMoney(coin);
         this.currentCoinLabel = coin;
@@ -129,6 +133,7 @@ export class UIGamePLay extends UICanvas {
 
     public updateCountBom(count: number): void {
         this.countBom.string = "x " + count;
+        this.countBom.node.getParent().getComponent(BubleItem).move();
     }
 
     updateStateSprite() {
