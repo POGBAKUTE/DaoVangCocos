@@ -23,7 +23,8 @@ export class UIVictory extends UICanvas {
 
     protected start(): void {
         
-        this.buttonNext.node.on(Button.EventType.CLICK, this.NextButton, this);
+        // this.buttonNext.node.on(Button.EventType.CLICK, this.NextButton, this);
+        this.node.on("OffNode", this.NextButton, this);
     }
 
     public open() : void {

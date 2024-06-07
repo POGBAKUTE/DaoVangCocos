@@ -1,6 +1,7 @@
 import { _decorator, CCFloat, CCInteger, Collider2D, Component, Contact2DType, Enum, IPhysics2DContact, Node } from 'cc';
 import { MapController } from './MapController';
 import { MoveItem } from './MoveItem';
+import { GameManager } from './GameManager';
 const { ccclass, property } = _decorator;
 
 export enum ItemType {
@@ -46,7 +47,7 @@ export class CoinItem extends Component {
 
     onDespawn(active: boolean, target: Node) {
         if(this.typeItem === ItemType.BOM) {
-            MapController.Instance.onDeActiveRadius(this, this.radiusBom);
+            GameManager.Instance.mapCurrent.getComponent(MapController).onDeActiveRadius(this, this.radiusBom);
         }
         else {
             if(this.typeItem === ItemType.CHUOT) {
@@ -64,6 +65,7 @@ export class CoinItem extends Component {
                if(this != null) {
 
                    this.node.active = false;
+                   this.target = null;
                }
                 this.isCollider = false;
     

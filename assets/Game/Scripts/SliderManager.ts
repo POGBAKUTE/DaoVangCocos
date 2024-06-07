@@ -10,13 +10,13 @@ export enum AudioType {
 @ccclass('SliderManager')
 export class SliderManager extends Component {
     @property(Slider)
-    slider: Slider;
+    slider: Slider | null = null;
 
     @property(ProgressBar)
-    progressBar: ProgressBar;
+    progressBar: ProgressBar| null = null;
 
     @property({ type: Enum(AudioType) })
-    stateAudio: AudioType = AudioType.Volume
+    stateAudio: AudioType| null = AudioType.Volume
 
 
     start() {

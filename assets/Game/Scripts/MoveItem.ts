@@ -4,14 +4,14 @@ const { ccclass, property } = _decorator;
 @ccclass('MoveItem')
 export class MoveItem extends Component {
     @property(CCFloat) 
-    distance: number;
+    distance: number| null;
 
     @property(CCFloat) 
-    duration: number;
+    duration: number| null;
 
 
-    private posLeft: Vec3
-    private posRight: Vec3
+    private posLeft: Vec3| null = null
+    private posRight: Vec3| null = null
     private currentTween = null
     start() {
         this.posLeft = new Vec3(this.node.getPosition().x - this.distance, this.node.getPosition().y, this.node.getPosition().z);

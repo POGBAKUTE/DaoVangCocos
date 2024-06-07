@@ -6,7 +6,7 @@ const { ccclass, property } = _decorator;
 export class AudioNut extends AudioBase {
     public open(): void {
         super.open();
-        this.close(1);
+        this.close(1.5);
     }
 }
 

@@ -8,13 +8,18 @@ const { ccclass, property } = _decorator;
 
 @ccclass('AudioManager')
 export class AudioManager extends Component {
-    public static Instance: AudioManager = null
+    public static Instance: AudioManager;
 
     private canvasActives: Map<Function, Node> = new Map();
     private canvasPrefabs: Map<Function, Prefab> = new Map();
 
     start() {
-        AudioManager.Instance = this;
+        if(AudioManager.Instance == null) {
+            AudioManager.Instance = this;
+        }
+        else {
+            this.destroy();
+        }
         this.loadAudio();
     }
 

@@ -1,6 +1,9 @@
 import { _decorator, Component, Enum, Node, Prefab, tween, Vec3, easing } from 'cc';
 import { ItemGainType } from '../Line';
 import { GameManager, eventTarget } from '../GameManager';
+import { AudioManager } from '../Audio/AudioManager';
+import { AudioSwoosh } from '../Audio/AudioSwoosh';
+import { AudioAlertGainItem } from '../Audio/AudioAlertGainItem';
 const { ccclass, property } = _decorator;
 
 @ccclass('ItemGainBase')
@@ -42,22 +45,28 @@ export class ItemGainBase extends Component {
         //     .start();
 
         tween(this.node.position)
-            .to(1, posB, {
+            .to(0.5, posB, {
                 easing: easing.bounceOut,
                 onUpdate: (target: Vec3, ratio: number) => {
                     this.node.position = target;
                 }
             })
             .delay(0.3)
-            .to(1, posC, {
-                easing: "smooth",
+            .call(() => {
+                setTimeout(() => {
+                    AudioManager.Instance.openAudio(AudioSwoosh);
+
+                }, 500)
+            })
+            .to(0.8, posC, {
+                easing: easing.elasticIn,
                 onUpdate: (target: Vec3, ratio: number) => {
                     this.node.position = target;
                 }
             })
             .call(() => {
                 this.close()
-                GameManager.Instance.pauseGame(false);
+                // AudioManager.Instance.openAudio(AudioAlertGainItem)
                 eventTarget.emit("tweenItemGain", this.typeItemGain, coin)
             })
             .start();

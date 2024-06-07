@@ -9,8 +9,8 @@ import { AudioReceiveItem } from './Audio/AudioReceiveItem';
 import { DataItemShop } from './ItemShop/DataItemShop';
 import { ItemGainType } from './Line';
 import { ItemGainBase } from './ItemGain/ItemGainBase';
-import { AudioWin } from './Audio/AudioWin';
-import { AudioNut } from './Audio/AudioNut';
+import { MapController } from './MapController';
+import { AudioClock } from './Audio/AudioClock';
 const { ccclass, property } = _decorator;
 export const eventTarget = new EventTarget();
 
@@ -25,7 +25,7 @@ export let playerData;
 
 @ccclass('GameManager')
 export class GameManager extends Component {
-    public static Instance: GameManager = null
+    public static Instance: GameManager;
     @property(Player)
     public player: Player | null = null
 
@@ -67,7 +67,7 @@ export class GameManager extends Component {
     public posC2: Node
 
     private timeCurrent = 0;
-    private mapCurrent: Node;
+    public mapCurrent: Node;
     private toastNode: Node;
 
     public coinCurrent: number;
@@ -75,10 +75,15 @@ export class GameManager extends Component {
     public stateGame: GameState;
     public targetCurrent: number = 0;
     public dataShopCurrent: DataItemShop;
-    onEnable(): void {
-        GameManager.Instance = this;
+    onLoad(): void {
+        if(GameManager.Instance == null) {
+            GameManager.Instance = this;
+        }
+        else {
+            this.destroy();
+        }
         this.showLoadingToast();
-        // localStorage.clear();
+        localStorage.clear();
         if (sys.localStorage.getItem("Player") == null) {
             playerData = {
                 Level: "1",
@@ -103,10 +108,6 @@ export class GameManager extends Component {
         eventTarget.on("tweenItemGain", this.onHandleItemGain, this)
     }
 
-    onDisable(): void {
-
-    }
-
     protected start(): void {
         this.setCurrentState(GameState.GS_INIT);
     }
@@ -128,7 +129,9 @@ export class GameManager extends Component {
             playerData.CoinPlayer = this.coinCurrent.toString();
             let dataShopIndex = (this.currentMapIndex - 1) % this.listShopLevel.length
             this.dataShopCurrent = this.listShopLevel[dataShopIndex];
+            UIManager.Instance.closeAllUI();
             UIManager.Instance.openUI(UIVictory);
+            playerData.Target = this.targetCurrent;
         }
         else {
             // playerData.Level = "1";
@@ -136,6 +139,7 @@ export class GameManager extends Component {
             // playerData.bomCount = 0;
             // playerData.Target = "0"
             // this.targetCurrent = 0;
+            UIManager.Instance.closeAllUI();
             UIManager.Instance.openUI(UIFail);
             this.resetHome();
         }
@@ -165,6 +169,7 @@ export class GameManager extends Component {
         this.mapCurrent.setPosition(Vec3.ZERO)
         this.node.parent.addChild(this.mapCurrent);
         this.mapCurrent.setSiblingIndex(0)
+        this.mapCurrent.getComponent(MapController).onInit();
         let targetIndex = (this.currentMapIndex - 1) % this.listTargetLevel.length;
         playerData.Target = this.targetCurrent;
         sys.localStorage.setItem("Player", JSON.stringify(playerData));
@@ -182,12 +187,12 @@ export class GameManager extends Component {
         this.coinCurrent = parseInt(playerData.CoinPlayer);
         this.pauseGame(true);
         this.player.resetPlayer();
+        this.timeCurrent = this.timePerLevel;
     }
 
     activeStartPlay() {
         this.player.onActive(true);
         this.schedule(this.updateCoundown, 1)
-        this.timeCurrent = this.timePerLevel;
         this.pauseGame(false);
     }
 
@@ -201,11 +206,12 @@ export class GameManager extends Component {
         else {
             this.unschedule(this.updateCoundown);
             this.setCurrentState(GameState.GS_END)
+            AudioManager.Instance.closeAudio(AudioClock, 0);
         }
     }
 
     updateCoin(coinGain: number, itemGainType: ItemGainType) {
-        this.pauseGame(true);
+        this.player.pausePlayer(true);
         AudioManager.Instance.openAudio(AudioReceiveItem)
         AudioManager.Instance.closeAudio(AudioReceiveItem, 1)
         let posA, posB, posC: Vec3;
@@ -242,6 +248,7 @@ export class GameManager extends Component {
     }
 
     onHandleItemGain(typeItemGain: ItemGainType, coinGain: number) {
+        this.player.pausePlayer(false);
         switch (typeItemGain) {
             case ItemGainType.GOLD:
                 this.coinCurrent += coinGain;

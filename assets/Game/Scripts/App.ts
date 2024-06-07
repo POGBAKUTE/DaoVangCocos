@@ -1,20 +1,25 @@
+import { js } from "cc";
+
 export namespace App {
     export function formatMoney(money: any): string {
         money = Number(money);
-        if (isNaN(money)) return "";
+        if (!js.isNumber(money)) return "";
 
-        let sign = '';
+        let sign = ''
         if (money < 0) {
-            sign = '-';
-            money = -money;
+            sign = '-'
+            money = -money
         }
 
-        // Sử dụng Intl.NumberFormat để định dạng số tiền
-        const formattedMoney = new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(money);
 
-        return sign + formattedMoney;
+        var strValue = money.toString();
+        var pos = strValue.length - 3;
+        while (pos > 0) {
+            strValue = [strValue.slice(0, pos), ".", strValue.slice(pos)].join(
+                ""
+            );
+            pos -= 3;
+        }
+        return sign + strValue;
     }
 }

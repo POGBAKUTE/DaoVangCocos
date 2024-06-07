@@ -11,13 +11,18 @@ const { ccclass, property } = _decorator;
 
 @ccclass('UIManager')
 export class UIManager extends Component {
-    public static Instance: UIManager = null
+    public static Instance: UIManager;
 
     private canvasActives: Map<Function, Node> = new Map();
     private canvasPrefabs: Map<Function, Prefab> = new Map();
 
     start() {
-        UIManager.Instance = this;
+        if(UIManager.Instance == null) {
+            UIManager.Instance = this;
+        }
+        else {
+            this.destroy();
+        }
         this.loadUI();
     }
 

@@ -6,6 +6,7 @@ import { UISetting } from './UISetting';
 import { UIVolume } from './UIVolume';
 import { AudioManager } from '../Audio/AudioManager';
 import { AudioNut } from '../Audio/AudioNut';
+import { playAnim } from '../playAnim';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIHome')
@@ -20,6 +21,11 @@ export class UIHome extends UICanvas {
     protected start(): void {
         this.buttonPlay.node.on(Button.EventType.CLICK, this.playButton, this);
         this.buttonAudio.node.on(Button.EventType.CLICK, this.audioButton, this);
+    }
+
+    public open(): void {
+        super.open();
+        // this.buttonPlay.getComponent(playAnim).startScaleAnimation();
     }
 
     playButton() {

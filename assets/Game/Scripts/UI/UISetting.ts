@@ -24,8 +24,9 @@ export class UISetting extends UICanvas {
     slideSFX: SliderManager
 
     protected start(): void {
-        this.buttonHome.node.on(Button.EventType.CLICK, this.homeButton, this);
-        this.buttonBack.node.on(Button.EventType.CLICK, this.backButton, this);
+        // this.buttonHome.node.on(Button.EventType.CLICK, this.homeButton, this);
+        // this.buttonBack.node.on(Button.EventType.CLICK, this.backButton, this);
+        this.node.on("OffNode", this.onHandleButton, this);
     }
 
     open() {
@@ -40,7 +41,7 @@ export class UISetting extends UICanvas {
 
     homeButton() {
         this.close(0)
-        AudioManager.Instance.openAudio(AudioNut);
+        // AudioManager.Instance.openAudio(AudioNut);
         UIManager.Instance.closeAllUI()
         UIManager.Instance.openUI(UIHome)
         GameManager.Instance.resetHome();
@@ -49,10 +50,22 @@ export class UISetting extends UICanvas {
     backButton() {
         this.close(0);
         GameManager.Instance.pauseGame(false);
-        AudioManager.Instance.openAudio(AudioNut);
+        // AudioManager.Instance.openAudio(AudioNut);
     }
 
-
+    onHandleButton(customEventData: string) {
+        console.log("custom data: " + customEventData);
+        switch (customEventData) {
+            case "back":
+                console.log("custom data: " + "back11111");
+                this.backButton();
+                break;
+            case "home":
+                console.log("custom data: " + "home11111");
+                this.homeButton();
+                break;
+        }
+    }
 }
 
 

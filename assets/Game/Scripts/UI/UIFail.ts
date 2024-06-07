@@ -22,7 +22,8 @@ export class UIFail extends UICanvas {
     target: Label
 
     protected start(): void {
-        this.buttonHome.node.on(Button.EventType.CLICK, this.HomeButton, this);
+        // this.buttonHome.node.on(Button.EventType.CLICK, this.HomeButton, this);
+        this.node.on("OffNode", this.HomeButton, this);
     }
 
     HomeButton() {

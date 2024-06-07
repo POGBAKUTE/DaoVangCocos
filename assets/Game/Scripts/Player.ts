@@ -1,4 +1,4 @@
-import { _decorator, CCFloat, Component, EventMouse, input, Input, Node, Vec3 } from 'cc';
+import { _decorator, CCFloat, Component, EventMouse, EventTouch, input, Input, Node, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 import { ItemGainType, Line } from './Line';
 import { GameManager, GameState } from './GameManager';
@@ -8,13 +8,13 @@ import { AudioPullDownItem } from './Audio/AudioPullDownItem';
 @ccclass('Player')
 export class Player extends Component {
     @property(Line)
-    line: Line;
+    line: Line| null = null;
 
     @property(CCFloat)
-    angleLimit: number;
+    angleLimit: number| null = 80;
 
     @property(CCFloat)
-    speedRotation: number;
+    speedRotation: number| null = 500;
 
 
 
@@ -24,13 +24,13 @@ export class Player extends Component {
 
     setThrow(): void {
         this.isThrow = false;
-        input.on(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
+        input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
     }
 
-    onMouseDown(event: EventMouse) {
+    onMouseDown(event: EventTouch) {
         this.isThrow = true;
         this.line.onDespawn(this.isThrow);
-        input.off(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
+        input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
         AudioManager.Instance.openAudio(AudioPullDownItem);
     }
 
@@ -55,11 +55,11 @@ export class Player extends Component {
 
     public onActive(active: boolean) {
         if (active) {
-            input.on(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
+            input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
             this.line.node.on('CollisionCircle', this.setThrow, this);
         }
         else {
-            input.off(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
+            input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
             this.line.node.off('CollisionCircle', this.setThrow, this);
         }
         this.isThrow = !active;

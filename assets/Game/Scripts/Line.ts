@@ -43,6 +43,9 @@ export class Line extends Component {
     @property(Prefab)
     boom: Prefab;
 
+    @property(CCFloat)
+    heightLine: number;
+
     private lineSize: UITransform;
     private isThrow: boolean = false;
     private isDown: boolean = false;
@@ -54,10 +57,13 @@ export class Line extends Component {
     itemGainType: ItemGainType = ItemGainType.GOLD
     start() {
         this.lineSize = this.node.getComponent(UITransform);
-        this.lineSize.contentSize = new Size(83.5, this.widthRopeInit);
+        this.lineSize.contentSize = new Size(this.heightLine, this.widthRopeInit);
         this.collider = this.colliderLine.getComponent(Collider2D)
+        
+        if(this.collider != null) {
+            this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
 
-        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        }
         eventTarget.on("OnBom", this.onHandleBom, this)
     }
 
@@ -231,7 +237,7 @@ export class Line extends Component {
     resetLine() {
         this.isDown = false;
         this.isThrow = false;
-        this.lineSize.contentSize = new Size(83.5, this.widthRopeInit);
+        this.lineSize.contentSize = new Size(this.heightLine, this.widthRopeInit);
         this.itemGain = null;
         this.coinGainPerPick = 0
     }
@@ -241,11 +247,11 @@ export class Line extends Component {
         if (this.isThrow && !this.isPause) {
             if (this.isDown) {
                 let widthDelta = this.speedRopeDown * deltaTime;
-                this.lineSize.contentSize = new Size(83.5, widthDelta + this.lineSize.contentSize.height);
+                this.lineSize.contentSize = new Size(this.heightLine, widthDelta + this.lineSize.contentSize.height);
             }
             else {
                 let widthDelta = this.speedRopeUp * deltaTime * -1;
-                this.lineSize.contentSize = new Size(83.5, widthDelta + this.lineSize.contentSize.height);
+                this.lineSize.contentSize = new Size(this.heightLine, widthDelta + this.lineSize.contentSize.height);
             }
         }
     }

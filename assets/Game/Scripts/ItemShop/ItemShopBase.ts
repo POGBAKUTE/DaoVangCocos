@@ -2,6 +2,8 @@ import { _decorator, Button, Component, Label, Node, Sprite, sys } from 'cc';
 import { playerData } from '../GameManager';
 import { UIManager } from '../UI/UIManager';
 import { UIShop } from '../UI/UIShop';
+import { AudioManager } from '../Audio/AudioManager';
+import { AudioItemShop } from '../Audio/AudioItemShop';
 const { ccclass, property } = _decorator;
 
 export enum ItemShopType {
@@ -38,8 +40,8 @@ export class ItemShopBase extends Component {
             playerData.CoinPlayer = coinPlayer - coinItemInt;
             sys.localStorage.setItem("Player", JSON.stringify(playerData));
             UIManager.Instance.getUI(UIShop).updateCoin(playerData.CoinPlayer)
+            AudioManager.Instance.openAudio(AudioItemShop);
         }
-        
     }
 
     ActiveItem(active: boolean): void {
