@@ -6,7 +6,7 @@ const { ccclass, property } = _decorator;
 export class AudioCountDownReady extends AudioBase {
     public open(): void {
         super.open();
-        this.close(3);
+        this.close(4);
     }
 }
 

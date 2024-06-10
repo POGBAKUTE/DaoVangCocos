@@ -83,7 +83,7 @@ export class GameManager extends Component {
             this.destroy();
         }
         this.showLoadingToast();
-        localStorage.clear();
+        // localStorage.clear();
         if (sys.localStorage.getItem("Player") == null) {
             playerData = {
                 Level: "1",

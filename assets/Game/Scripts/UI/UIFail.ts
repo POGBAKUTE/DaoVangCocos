@@ -8,12 +8,13 @@ import { AudioManager } from '../Audio/AudioManager';
 import { AudioNut } from '../Audio/AudioNut';
 import { AudioThua } from '../Audio/AudioThua';
 import { App } from '../App';
+import { ButtonCustom } from '../Button/ButtonCustom';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIFail')
 export class UIFail extends UICanvas {
-    @property(Button)
-    buttonHome: Button
+    @property(ButtonCustom)
+    buttonHome: ButtonCustom
 
     @property(Label)
     coin: Label
@@ -33,10 +34,15 @@ export class UIFail extends UICanvas {
         // AudioManager.Instance.openAudio(AudioNut)
     }
 
+    onInitButton() {
+        this.buttonHome.isTouch = true;
+    }
+
     public open() : void {
         super.open();
         AudioManager.Instance.openAudio(AudioThua)
         this.updateState();
+        this.onInitButton()
     }
 
     updateState(): void {

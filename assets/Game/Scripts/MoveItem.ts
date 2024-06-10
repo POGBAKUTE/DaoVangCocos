@@ -30,8 +30,7 @@ export class MoveItem extends Component {
         this.currentTween = tween(this.node)
             .to(randomDuration, { position: this.posRight })
             .call(() => {
-                let tmp = this.node.getScale();
-                this.node.setScale(new Vec3(-tmp.x, tmp.y, tmp.z)); // Quay đầu ngay lập tức
+                this.node.setRotationFromEuler(new Vec3(0, 0, 0)); // Quay đầu ngay lập tức
                 this.moveToA(); // Gọi moveToA sau khi di chuyển đến pointB
             })
             .start();
@@ -42,8 +41,7 @@ export class MoveItem extends Component {
         this.currentTween = tween(this.node)
             .to(randomDuration, { position: this.posLeft })
             .call(() => {
-                let tmp = this.node.getScale();
-                this.node.setScale(new Vec3(tmp.x * -1, tmp.y, tmp.z)); // Quay đầu ngay lập tức
+                this.node.setRotationFromEuler(new Vec3(-180, 0, 0)); // Quay đầu ngay lập tức
                 this.moveToB(); // Gọi moveToB sau khi di chuyển đến pointA
             })
             .start();

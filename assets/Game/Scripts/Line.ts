@@ -59,8 +59,8 @@ export class Line extends Component {
         this.lineSize = this.node.getComponent(UITransform);
         this.lineSize.contentSize = new Size(this.heightLine, this.widthRopeInit);
         this.collider = this.colliderLine.getComponent(Collider2D)
-        
-        if(this.collider != null) {
+
+        if (this.collider != null) {
             this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
 
         }
@@ -72,7 +72,7 @@ export class Line extends Component {
             //Cham vong tron tinh diem
             // this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             this.isThrow = false;
-            if((this.coinGainPerPick > 0 || this.itemGainType != ItemGainType.GOLD) && GameManager.Instance.stateGame !== GameState.GS_END && this.itemGainType != null) {
+            if ((this.coinGainPerPick > 0 || this.itemGainType != ItemGainType.GOLD) && GameManager.Instance.stateGame !== GameState.GS_END && this.itemGainType != null) {
                 eventTarget.emit("UpdateCoin", this.coinGainPerPick, this.itemGainType)
             }
             this.node.emit("CollisionCircle");
@@ -161,45 +161,47 @@ export class Line extends Component {
                 this.itemGainType = ItemGainType.GOLD;
                 break;
             case ItemType.LUCKY:
-                let randomIndex = this.getRandomNumberInRange(1, 5);
-                switch (randomIndex) {
-                    case 1:
-                        //Vang
-                        if (parseInt(playerData.luckyCount) > 0) {
-                            this.coinGainPerPick = this.itemGain.getCoin() * this.getRandomNumberInRange(5, 10);
-                        }
-                        else {
+                if (parseInt(playerData.luckyCount) > 0) {
+                    this.coinGainPerPick = this.itemGain.getCoin() * this.getRandomNumberInRange(5, 10);
+                    this.itemGainType = ItemGainType.GOLD;
+                }
+                else {
+
+                    let randomIndex = this.getRandomNumberInRange(1, 5);
+                    switch (randomIndex) {
+                        case 1:
+                            //Vang
                             this.coinGainPerPick = this.itemGain.getCoin() * this.getRandomNumberInRange(1, 3);
-                        }
-                        this.itemGainType = ItemGainType.GOLD;
-                        break;
-                    case 2:
-                        //Bom
-                        
-                        this.coinGainPerPick = 0;
-                        this.itemGainType = ItemGainType.BOM;
-                        break;
-                    case 3:
-                        //Diamond
-                        
-                        this.coinGainPerPick = 0;
-                        this.itemGainType = ItemGainType.DIAMOND;
-                        break;
+                            this.itemGainType = ItemGainType.GOLD;
+                            break;
+                        case 2:
+                            //Bom
 
-                    case 4:
-                        //Da
-                        
-                        this.coinGainPerPick = 0;
-                        this.itemGainType = ItemGainType.DA;
-                        break;
-                    case 5:
-                        //Health
-                        
-                        this.coinGainPerPick = 0;
-                        this.itemGainType = ItemGainType.HEALTH;
-                        break;
+                            this.coinGainPerPick = 0;
+                            this.itemGainType = ItemGainType.BOM;
+                            break;
+                        case 3:
+                            //Diamond
+
+                            this.coinGainPerPick = 0;
+                            this.itemGainType = ItemGainType.DIAMOND;
+                            break;
+
+                        case 4:
+                            //Da
+
+                            this.coinGainPerPick = 0;
+                            this.itemGainType = ItemGainType.DA;
+                            break;
+                        case 5:
+                            //Health
+
+                            this.coinGainPerPick = 0;
+                            this.itemGainType = ItemGainType.HEALTH;
+                            break;
 
 
+                    }
                 }
                 break;
         }

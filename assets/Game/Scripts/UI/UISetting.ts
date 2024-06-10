@@ -7,15 +7,16 @@ import { AudioNut } from '../Audio/AudioNut';
 import { UIManager } from './UIManager';
 import { UIHome } from './UIHome';
 import { UIGamePLay } from './UIGamePLay';
+import { ButtonCustom } from '../Button/ButtonCustom';
 const { ccclass, property } = _decorator;
 
 @ccclass('UISetting')
 export class UISetting extends UICanvas {
-    @property(Button)
-    buttonHome: Button
+    @property(ButtonCustom)
+    buttonHome: ButtonCustom
 
-    @property(Button)
-    buttonBack: Button
+    @property(ButtonCustom)
+    buttonBack: ButtonCustom
 
     @property(SliderManager)
     slideVolume: SliderManager
@@ -32,6 +33,7 @@ export class UISetting extends UICanvas {
     open() {
         super.open();
         this.setup();
+        this.onInitButton();
     }
 
     setup() {
@@ -45,12 +47,14 @@ export class UISetting extends UICanvas {
         UIManager.Instance.closeAllUI()
         UIManager.Instance.openUI(UIHome)
         GameManager.Instance.resetHome();
+
     }
 
     backButton() {
         this.close(0);
         GameManager.Instance.pauseGame(false);
         // AudioManager.Instance.openAudio(AudioNut);
+
     }
 
     onHandleButton(customEventData: string) {
@@ -65,6 +69,11 @@ export class UISetting extends UICanvas {
                 this.homeButton();
                 break;
         }
+    }
+
+    onInitButton() {
+        this.buttonBack.isTouch = true;
+        this.buttonHome.isTouch = true;
     }
 }
 

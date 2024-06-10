@@ -37,6 +37,7 @@ export class UICountDownStart extends UICanvas {
                 .call(() => {
                     this.tweenBackGround();
                     GameManager.Instance.activeStartPlay();
+                    this.close(0)
                 })
                 .start()
             return;

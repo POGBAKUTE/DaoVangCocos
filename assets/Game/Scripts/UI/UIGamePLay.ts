@@ -14,13 +14,14 @@ import { MoveLabel } from '../Popup/MoveLabel';
 import { MoveItemGamePLay } from './MoveItemGamePLay';
 import { UICountDownStart } from './UICountDownStart';
 import { BubleItem } from '../Popup/BubleItem';
+import { ButtonCustom } from '../Button/ButtonCustom';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIGamePlay')
 export class UIGamePLay extends UICanvas {
     @property(Node) public preparePlay : Node;
     @property(Node) public startPlay : Node;
-    @property(Button) public buttonPlay : Button;
+    @property(ButtonCustom) public buttonPlay : ButtonCustom;
     @property(Button) public buttonPause : Button;
     @property(Button) public buttonBom : Button;
 
@@ -54,6 +55,10 @@ export class UIGamePLay extends UICanvas {
         this.node.on("OffNode", this.playButton, this);
     }
 
+    onInitButton() {
+        this.buttonPlay.isTouch = true;
+    }
+
     playButton() {
         this.preparePlay.active = false;
         this.startPlay.active = true;
@@ -83,6 +88,7 @@ export class UIGamePLay extends UICanvas {
         super.open();
         this.setup();
         this.moveItemPlay.onInit()
+        this.onInitButton()
     }
 
     public setup(): void {
@@ -99,7 +105,13 @@ export class UIGamePLay extends UICanvas {
     public updateCoin(coin: number): void {
         // this.labelCoinStart.string = App.formatMoney(coin);
         this.labelCoinStart.node.getParent().getComponent(BubleItem).move();
-        this.changeNumber(this.labelCoinStart, this.currentCoinLabel, coin, this.changeTime)
+        if(this.currentCoinLabel != 0) {
+
+            this.changeNumber(this.labelCoinStart, this.currentCoinLabel, coin, this.changeTime)
+        }
+        else {
+            this.labelCoinStart.string = App.formatMoney(coin);
+        }
         this.labelCoinPrepare.string = App.formatMoney(coin);
         this.currentCoinLabel = coin;
         if(coin >= this.targetCoinLabel) {

@@ -7,13 +7,14 @@ import { AudioManager } from '../Audio/AudioManager';
 import { AudioNut } from '../Audio/AudioNut';
 import { AudioWin } from '../Audio/AudioWin';
 import { App } from '../App';
+import { ButtonCustom } from '../Button/ButtonCustom';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIVictory')
 export class UIVictory extends UICanvas {
 
-    @property(Button)
-    buttonNext: Button
+    @property(ButtonCustom)
+    buttonNext: ButtonCustom
 
     @property(Label)
     coin: Label
@@ -27,10 +28,15 @@ export class UIVictory extends UICanvas {
         this.node.on("OffNode", this.NextButton, this);
     }
 
+    onInitButton() {
+        this.buttonNext.isTouch = true;
+    }
+
     public open() : void {
         super.open();
         this.updateState();
         AudioManager.Instance.openAudio(AudioWin);
+        this.onInitButton();
     }
 
     NextButton() {

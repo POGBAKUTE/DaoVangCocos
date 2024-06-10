@@ -5,12 +5,13 @@ import { ItemShopBase, ItemShopType } from '../ItemShop/ItemShopBase';
 import { AudioManager } from '../Audio/AudioManager';
 import { AudioNut } from '../Audio/AudioNut';
 import { App } from '../App';
+import { ButtonCustom } from '../Button/ButtonCustom';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIShop')
 export class UIShop extends UICanvas {
-    @property(Button)
-    buttonNext: Button;
+    @property(ButtonCustom)
+    buttonNext: ButtonCustom;
 
     @property(Label)
     coinPlayer: Label;
@@ -38,6 +39,10 @@ export class UIShop extends UICanvas {
         this.node.on("OffNode", this.nextButton, this);
     }
 
+    onInitButton() {
+        this.buttonNext.isTouch = true;
+    }
+
     nextButton() {
         this.close(0);
         GameManager.Instance.setCurrentState(GameState.GS_PLAYING);
@@ -47,6 +52,7 @@ export class UIShop extends UICanvas {
     public open(): void {
         super.open();
         this.setup();
+        this.onInitButton()
     }
 
     public setup(): void {
