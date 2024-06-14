@@ -18,7 +18,7 @@ export class ButtonCustom extends Component {
     popup: Popup_window;
 
     @property({type: CCString}) 
-    key: string = "";
+    key: string;
 
     public isTouch: boolean = true;
     start() {

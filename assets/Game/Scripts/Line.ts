@@ -46,6 +46,9 @@ export class Line extends Component {
     @property(CCFloat)
     heightLine: number;
 
+    @property(CCFloat)
+    upSpeed: number;
+
     private lineSize: UITransform;
     private isThrow: boolean = false;
     private isDown: boolean = false;
@@ -91,7 +94,7 @@ export class Line extends Component {
                 this.itemGain = other.getComponent(CoinItem);
                 if (parseInt(playerData.healthCount) > 0) {
 
-                    this.speedRopeUp = this.itemGain.getSpeed() * 2;
+                    this.speedRopeUp = this.itemGain.getSpeed() * this.upSpeed;
                 }
                 else {
                     this.speedRopeUp = this.itemGain.getSpeed();

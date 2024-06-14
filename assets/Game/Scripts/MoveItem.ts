@@ -1,4 +1,4 @@
-import { _decorator, CCFloat, Component, Node, Tween, tween, Vec2, Vec3 } from 'cc';
+import { _decorator, CCFloat, Component, Node, Quat, Tween, tween, Vec2, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('MoveItem')
@@ -30,7 +30,8 @@ export class MoveItem extends Component {
         this.currentTween = tween(this.node)
             .to(randomDuration, { position: this.posRight })
             .call(() => {
-                this.node.setRotationFromEuler(new Vec3(0, 0, 0)); // Quay đầu ngay lập tức
+                this.node.scale = new Vec3(-1, 1, 1); // Quay đầu ngay lập tức
+                console.log(this.node.getRotation())
                 this.moveToA(); // Gọi moveToA sau khi di chuyển đến pointB
             })
             .start();
@@ -41,7 +42,7 @@ export class MoveItem extends Component {
         this.currentTween = tween(this.node)
             .to(randomDuration, { position: this.posLeft })
             .call(() => {
-                this.node.setRotationFromEuler(new Vec3(-180, 0, 0)); // Quay đầu ngay lập tức
+                this.node.scale = new Vec3(1, 1, 1); // Quay đầu ngay lập tức
                 this.moveToB(); // Gọi moveToB sau khi di chuyển đến pointA
             })
             .start();

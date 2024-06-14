@@ -11,6 +11,8 @@ import { ItemGainType } from './Line';
 import { ItemGainBase } from './ItemGain/ItemGainBase';
 import { MapController } from './MapController';
 import { AudioClock } from './Audio/AudioClock';
+import { ItemShopIAPType } from './ShopIAP/ItemShopIAPBase';
+import { UIShopIAP } from './UI/UIShopIAP';
 const { ccclass, property } = _decorator;
 export const eventTarget = new EventTarget();
 
@@ -75,8 +77,11 @@ export class GameManager extends Component {
     public stateGame: GameState;
     public targetCurrent: number = 0;
     public dataShopCurrent: DataItemShop;
+
+
+    private isAdvertisement: boolean = true;
     onLoad(): void {
-        if(GameManager.Instance == null) {
+        if (GameManager.Instance == null) {
             GameManager.Instance = this;
         }
         else {
@@ -95,17 +100,23 @@ export class GameManager extends Component {
                 daCount: "0",
                 healthCount: "0",
                 diamondCount: "0",
-                luckyCount: "0"
+                luckyCount: "0",
+                superIAP: "0",
+                recommendIAP: "0",
+                newIAP: "0",
+                removalIAP: "0",
             };
             sys.localStorage.setItem("Player", JSON.stringify(playerData));
         }
         else {
             playerData = JSON.parse(sys.localStorage.getItem("Player"));
         }
+        this.loadDataIAP();
         this.currentMapIndex = parseInt(playerData.Level);
         this.targetCurrent = parseInt(playerData.Target);
         eventTarget.on("UpdateCoin", this.updateCoin, this)
         eventTarget.on("tweenItemGain", this.onHandleItemGain, this)
+        eventTarget.on("PayItemShopIAP", this.onHandlePay, this)
     }
 
     protected start(): void {
@@ -132,30 +143,25 @@ export class GameManager extends Component {
             UIManager.Instance.closeAllUI();
             UIManager.Instance.openUI(UIVictory);
             playerData.Target = this.targetCurrent;
+            this.resetItemShopPerLevel();
         }
         else {
-            // playerData.Level = "1";
-            // playerData.CoinPlayer = "0";
-            // playerData.bomCount = 0;
-            // playerData.Target = "0"
-            // this.targetCurrent = 0;
             UIManager.Instance.closeAllUI();
             UIManager.Instance.openUI(UIFail);
             this.resetHome();
         }
-        this.resetItemShopPerLevel();
         sys.localStorage.setItem("Player", JSON.stringify(playerData));
         this.currentMapIndex = parseInt(playerData.Level);
 
     }
 
     resetHome() {
-        playerData.Level = "1";
-        playerData.CoinPlayer = "0";
+        playerData.Level = 1;
+        playerData.CoinPlayer = 0;
         playerData.bomCount = 0;
-        playerData.Target = "0"
+        playerData.Target = 0
         this.targetCurrent = 0;
-        this.resetItemShopPerLevel();
+        this.resetItemShopEnd();
         sys.localStorage.setItem("Player", JSON.stringify(playerData));
         this.currentMapIndex = parseInt(playerData.Level);
     }
@@ -218,7 +224,7 @@ export class GameManager extends Component {
         switch (itemGainType) {
             case ItemGainType.GOLD:
                 posA = this.player.node.getPosition().subtract(new Vec3(0, 100, 0));
-                posB = this.player.node.getPosition().subtract(new Vec3(150, 0, 0));
+                posB = this.player.node.getPosition().subtract(new Vec3(200, -50, 0));
                 posC = this.posC1.getPosition();
                 break;
             case ItemGainType.BOM:
@@ -335,10 +341,84 @@ export class GameManager extends Component {
     // }
 
     resetItemShopPerLevel() {
+        if (playerData.superIAP === "0") {
+            playerData.daCount = 0;
+            if (playerData.healthCount > 0) {
+
+                playerData.healthCount -= 1;
+            }
+            playerData.diamondCount = 0;
+
+        }
+        playerData.luckyCount = 0;
+        sys.localStorage.setItem("Player", JSON.stringify(playerData));
+    }
+
+    resetItemShopEnd() {
         playerData.daCount = 0;
         playerData.healthCount = 0;
         playerData.luckyCount = 0;
         playerData.diamondCount = 0;
+        this.loadDataIAP()
+        sys.localStorage.setItem("Player", JSON.stringify(playerData));
+    }
+
+    //Pay
+    onHandlePay(typeItemShopIAP: ItemShopIAPType, cost: string) {
+        console.log("Cost: " + cost);
+        //Neu thanh toan thanh cong
+        // eventTarget.emit("PaySuccess", typeItemShopIAP)
+        this.onUpdateDataIAP(typeItemShopIAP)
+    }
+
+    onUpdateDataIAP(typeItemShopIAP: ItemShopIAPType) {
+        switch (typeItemShopIAP) {
+            case ItemShopIAPType.SUPER:
+                console.log("SUPER PLAYER");
+                playerData.superIAP = "1"
+                break;
+            case ItemShopIAPType.RECOMMEND:
+                console.log("RECOMMEND PLAYER");
+                playerData.recommendIAP = "1"
+                break;
+            case ItemShopIAPType.NEW:
+                console.log("NEW PLAYER");
+                playerData.newIAP = "1"
+                break;
+            case ItemShopIAPType.REMOVAL:
+                console.log("REMOVAL PLAYER");
+                playerData.removalIAP = "1"
+                break;
+        }
+        UIManager.Instance.getUI(UIShopIAP).updateStateList();
+        sys.localStorage.setItem("Player", JSON.stringify(playerData));
+        this.loadDataIAP();
+    }
+
+    loadDataIAP() {
+        playerData.bomCount = 0;
+        playerData.healthCount = 0;
+        playerData.daCount = 0;
+        playerData.diamondCount = 0;
+        if (playerData.superIAP === "1") {
+            this.isAdvertisement = false;
+            playerData.bomCount = parseInt(playerData.bomCount) + 100;
+            playerData.healthCount = 1;
+            playerData.daCount = 1;
+            playerData.diamondCount = 1;
+        }
+        if (playerData.recommendIAP === "1") {
+            this.isAdvertisement = false;
+            playerData.bomCount = parseInt(playerData.bomCount) + 20;
+            playerData.healthCount = parseInt(playerData.healthCount) + 5;
+        }
+        if (playerData.newIAP === "1") {
+            this.isAdvertisement = false;
+            playerData.bomCount = parseInt(playerData.bomCount) + 10;
+        }
+        if (playerData.removalIAP === "1") {
+            this.isAdvertisement = false;
+        }
         sys.localStorage.setItem("Player", JSON.stringify(playerData));
     }
 

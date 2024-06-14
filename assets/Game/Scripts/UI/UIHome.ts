@@ -8,6 +8,7 @@ import { AudioManager } from '../Audio/AudioManager';
 import { AudioNut } from '../Audio/AudioNut';
 import { playAnim } from '../playAnim';
 import { ButtonCustom } from '../Button/ButtonCustom';
+import { UIShopIAP } from './UIShopIAP';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIHome')
@@ -18,10 +19,14 @@ export class UIHome extends UICanvas {
     @property(Button)
     buttonAudio : Button;
 
+    @property(Button)
+    buttonShopIAP : Button;
+
 
     protected start(): void {
         // this.buttonPlay.node.on(Button.EventType.CLICK, this.playButton, this);
         this.buttonAudio.node.on(Button.EventType.CLICK, this.audioButton, this);
+        this.buttonShopIAP.node.on(Button.EventType.CLICK, this.shopIAPButton, this);
         this.node.on("OffNode", this.playButton, this);
     }
 
@@ -43,6 +48,11 @@ export class UIHome extends UICanvas {
 
     audioButton() {
         UIManager.Instance.openUI(UIVolume);
+        AudioManager.Instance.openAudio(AudioNut);
+    }
+
+    shopIAPButton() {
+        UIManager.Instance.openUI(UIShopIAP);
         AudioManager.Instance.openAudio(AudioNut);
     }
 }

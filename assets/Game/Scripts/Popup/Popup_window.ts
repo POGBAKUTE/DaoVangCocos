@@ -1,4 +1,4 @@
-import { _decorator, CCFloat, Component, easing, Node, Sprite, tween, UIOpacity, Vec3 } from 'cc';
+import { _decorator, AudioClip, CCFloat, Component, easing, Node, resources, Sprite, tween, UIOpacity, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Popup_window')
@@ -30,6 +30,7 @@ export class Popup_window extends Component {
     // }
 
     ShowPopup() {
+        this.playPopupAudio()
         if (this.backGround != null) {
             this.backGround.opacity = 200;
             tween(this.backGround)
@@ -112,6 +113,19 @@ export class Popup_window extends Component {
         }
 
 
+    }
+
+    playPopupAudio() {
+        resources.load("Audio/popup_appear", AudioClip, (err, clip) => {
+            if (err) {
+                console.log("Khong thay nhac")
+                return;
+            }
+
+            if (clip) {
+                clip.play();
+            }
+        });
     }
 }
 

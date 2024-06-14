@@ -46,7 +46,7 @@ export class UIShop extends UICanvas {
     nextButton() {
         this.close(0);
         GameManager.Instance.setCurrentState(GameState.GS_PLAYING);
-        AudioManager.Instance.openAudio(AudioNut)
+        // AudioManager.Instance.openAudio(AudioNut)
     }
 
     public open(): void {

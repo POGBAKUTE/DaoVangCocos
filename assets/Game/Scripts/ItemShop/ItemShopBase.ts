@@ -41,7 +41,12 @@ export class ItemShopBase extends Component {
             sys.localStorage.setItem("Player", JSON.stringify(playerData));
             UIManager.Instance.getUI(UIShop).updateCoin(playerData.CoinPlayer)
             AudioManager.Instance.openAudio(AudioItemShop);
+            this.updateItemToData()
         }
+    }
+
+    updateItemToData() {
+
     }
 
     ActiveItem(active: boolean): void {

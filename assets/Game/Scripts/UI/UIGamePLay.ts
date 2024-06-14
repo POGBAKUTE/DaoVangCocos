@@ -144,7 +144,7 @@ export class UIGamePLay extends UICanvas {
     }
 
     public updateCountBom(count: number): void {
-        this.countBom.string = "x " + count;
+        this.countBom.string = "x" + count;
         this.countBom.node.getParent().getComponent(BubleItem).move();
     }
 

@@ -266,7 +266,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 603.188698284561,
+    "_orthoHeight": 780.3655352480419,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -1093,6 +1093,7 @@
       "__expectedType__": "cc.Prefab"
     },
     "heightLine": 55,
+    "upSpeed": 1.5,
     "_id": "ceECBgrttHKJevfrqGSWJu"
   },
   {
@@ -1377,6 +1378,10 @@
     "typeItemGain": 0,
     "coin": {
       "__id__": 36
+    },
+    "coinPrefab": {
+      "__uuid__": "aab4f673-9cc6-4929-8ba7-fe9af2bea0f6",
+      "__expectedType__": "cc.Prefab"
     },
     "_id": "c06qGBJHxHpJEchswFyrue"
   },
@@ -1849,7 +1854,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "58c60ce1-5aff-4b85-aa72-062f9c24e157@f9941",
+      "__uuid__": "e6cff67f-52cc-4ff3-8909-1329044a32a1@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,

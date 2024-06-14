@@ -43,6 +43,8 @@ export class AudioManager extends Component {
     
         loadPromise.then(() => {
             this.openAudio(AudioMain);
+            this.changeSFX(parseFloat(playerData.audioSFX))
+            this.changeVolume(parseFloat(playerData.audioVolume))
         }).catch(error => {
             console.error('Failed to load Audio prefabs', error);
         });
